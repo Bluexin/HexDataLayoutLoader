@@ -17,7 +17,7 @@ dependencies {
     testImplementation(kotlin("test"))
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.15.0")
     implementation("io.github.oshai:kotlin-logging-jvm:4.0.0-beta-28")
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.0")
+    api("org.jetbrains.kotlinx:kotlinx-coroutines-core-jvm:1.7.0")
     runtimeOnly("org.slf4j:slf4j-api:2.0.7")
     runtimeOnly("ch.qos.logback:logback-classic:1.4.7")
 }

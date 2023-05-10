@@ -1,11 +1,14 @@
 package be.bluexin.layoutloader.json
 
 import com.fasterxml.jackson.annotation.*
+import com.fasterxml.jackson.databind.PropertyNamingStrategies
+import com.fasterxml.jackson.databind.annotation.JsonNaming
 
 @JsonTypeInfo(
     use = JsonTypeInfo.Id.DEDUCTION,
     include = JsonTypeInfo.As.EXISTING_PROPERTY
 )
+@JsonNaming(PropertyNamingStrategies.SnakeCaseStrategy::class)
 sealed interface Field {
     val description: String?
     val offset: Int
@@ -73,7 +76,6 @@ interface Repeated : Field {
         get() = name("group")
     val repeat: Int
 
-    @get:JsonProperty("element_name")
     val elementName: String
 
     fun name(qualifier: String): String = elementName.replace("\$i", qualifier)
@@ -115,7 +117,7 @@ class RepeatedLookupField(
     lookup: String,
     override var repeat: Int,
     override var elementName: String
-) : Lookup("", description, offset, lookup), Repeated {
+) : Field, Lookup("", description, offset, lookup), Repeated {
     override val name: String
         get() = super<Repeated>.name
 
