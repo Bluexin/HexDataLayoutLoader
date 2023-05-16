@@ -6,7 +6,7 @@ import com.fasterxml.jackson.annotation.JsonIgnore
 import io.github.oshai.KotlinLogging
 
 class DataLayout(
-    var fields: List<Field>,
+    val fields: List<Field>,
 ) : Named {
     @JsonAnyGetter
     @JsonAnySetter

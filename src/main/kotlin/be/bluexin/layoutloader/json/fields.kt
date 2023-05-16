@@ -2,7 +2,7 @@ package be.bluexin.layoutloader.json
 
 import kotlin.math.pow
 
-fun List<Field>.expandRepeats() = asSequence().flatMap {
+fun List<Field>.expandRepeats(): Sequence<Size> = asSequence().flatMap {
     when (it) {
         is RepeatedLookupField -> (1..it.repeat).map { i ->
             Lookup(it.name(i), it.description, it.offset + it.repeat * it.size, it.lookup).apply {
@@ -21,7 +21,7 @@ fun List<Field>.expandRepeats() = asSequence().flatMap {
         }
 
         is Repeated -> error("Unknown repeated field $it")
-        else -> listOf(it)
+        else -> listOf(it as Size)
     }
 }
 
@@ -46,4 +46,5 @@ fun String.substring(field: Size) =
 fun String.readBE() = ifEmpty { "0" }
     .chunked(2).reversed()
     .joinToString(separator = "").toULong(16)
-    .toString()
+
+fun Size.read(from: String) = from.substring(this).readBE()
