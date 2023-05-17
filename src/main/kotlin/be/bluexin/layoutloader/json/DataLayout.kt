@@ -7,20 +7,20 @@ import io.github.oshai.KotlinLogging
 
 class DataLayout(
     val fields: List<Field>,
+    val filter: Map<String, String> = emptyMap(),
+    val clientFile: String
 ) : Named {
     @JsonAnyGetter
     @JsonAnySetter
     val extra: MutableMap<String, String> = mutableMapOf()
 
-    @JsonIgnore
-    lateinit var fileFilter: String
-        private set
-
     var loadingTimeStamp = 0L
         private set
 
+    @JsonIgnore
+    override lateinit var name: String
+
     fun load(metadata: Metadata, structures: Map<String, LayoutStructure>, lookups: Map<String, LayoutLookup>) {
-        fileFilter = extra[metadata.fileFilter] ?: error("Couldn't find file filter in $extra")
         logger.info { "Resolving $name" }
         fields.forEach {
             try {
@@ -56,8 +56,6 @@ class DataLayout(
         result = 31 * result + loadingTimeStamp.hashCode()
         return result
     }
-
-    override val name: String get() = fileFilter
 }
 
 private val logger = KotlinLogging.logger { }

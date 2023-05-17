@@ -5,5 +5,6 @@ data class Metadata(
     val fileFilter: String,
     val structures: String,
     val layouts: String,
+    val serverFiles: String,
     val lookups: String
 )

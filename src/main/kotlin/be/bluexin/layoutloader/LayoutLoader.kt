@@ -24,6 +24,7 @@ object LayoutLoader {
 
     private fun <T : Named> File.read(typeRef: TypeReference<T>, init: (T) -> Unit): Pair<String, T>? = try {
         val read = objectMapper.readValue(this, typeRef)
+        read.name = this.nameWithoutExtension
         init(read)
         logger.info { "Loaded ${read.name} (${this})" }
         read.name to read
