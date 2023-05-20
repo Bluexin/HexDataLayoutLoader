@@ -55,8 +55,9 @@ open class Lookup(
     name: String,
     description: String?,
     offset: Int,
-    lookup: String
-) : Size(name, description, offset, 0), Field {
+    lookup: String,
+    export: Boolean = true
+) : Size(name, description, offset, 0, export), Field {
     val lookup: String = lookup
         get() = if (enabled) lookupRef.name else field
 

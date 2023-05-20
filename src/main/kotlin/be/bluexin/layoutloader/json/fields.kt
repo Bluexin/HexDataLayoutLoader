@@ -6,24 +6,24 @@ private fun Structure.expand(): List<Size> = structureRef.fields.map {  f ->
     Size(
         "${name}-${f.name}",
         listOfNotNull(description, f.description).joinToString("\n"),
-        offset + f.offset, f.size, false
+        offset + f.offset, f.size, export
     )
 }
 
 fun List<Field>.expandRepeats(): Sequence<Size> = asSequence().flatMap {
     when (it) {
         is RepeatedLookupField -> (1..it.repeat).map { i ->
-            Lookup(it.name(i), it.description, it.offset + i * it.size, it.lookup).apply {
+            Lookup(it.name(i), it.description, it.offset + (i - 1) * it.size, it.lookup, it.export).apply {
                 lookupRef = it.lookupRef
             }
         }
 
         is RepeatedSizeField -> (1..it.repeat).map { i ->
-            Size(it.name(i), it.description, it.offset + i * it.size, it.size)
+            Size(it.name(i), it.description, it.offset + (i - 1) * it.size, it.size, it.export)
         }
 
         is RepeatedStructureField -> (1..it.repeat).flatMap { i ->
-            Structure(it.name(i), it.description, it.offset + i * it.size, it.structure).apply {
+            Structure(it.name(i), it.description, it.offset + (i - 1) * it.size, it.structure).apply {
                 structureRef = it.structureRef
             }.expand()
         }
