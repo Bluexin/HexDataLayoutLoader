@@ -49,7 +49,7 @@ fun String.readBE() = ifEmpty { "0" }
 
 fun Size.read(from: String) = from.substring(this).readBE()
 
-fun Size.write(value: ULong) = value.toString(16).padStart(maxCharacter, '0').uppercase()
+fun Size.write(value: ULong) = value.toString(16).padStart(characterSize, '0').uppercase()
     .chunked(2).reversed()
     .joinToString(separator = "")
 
