@@ -48,3 +48,9 @@ fun String.readBE() = ifEmpty { "0" }
     .joinToString(separator = "").toULong(16)
 
 fun Size.read(from: String) = from.substring(this).readBE()
+
+fun Size.write(value: ULong) = value.toString(16).padStart(maxCharacter, '0').uppercase()
+    .chunked(2).reversed()
+    .joinToString(separator = "")
+
+fun Size.write(value: ULong, to: String) = to.replaceRange(characterOffset, maxCharacter, write(value))

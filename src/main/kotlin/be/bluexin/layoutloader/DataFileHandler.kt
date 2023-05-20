@@ -15,7 +15,7 @@ data class DataFile(
 
 data class DataHolder(
     val position: Long,
-    val text: String
+    var text: String
 )
 
 object DataFileHandler {
@@ -69,7 +69,7 @@ object DataFileHandler {
                 dataFile.data.forEach { data ->
                     it.readLine()
                     it.seek(data.position)
-                    it.write((data.text.replace('0', 'F')).encodeToByteArray())
+                    it.write((data.text).encodeToByteArray())
                 }
             }
         }
@@ -89,7 +89,7 @@ fun main() {
             }
         }
         delay(20_000)
-        logger.info { "Replacing all 0's with F's" }
+//        logger.info { "Replacing all 0's with F's" }
         DataFileHandler.writeData(data)
         watcher.cancelAndJoin()
     }
