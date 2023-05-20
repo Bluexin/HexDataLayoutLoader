@@ -6,30 +6,30 @@ private fun Structure.expand(): List<Size> = structureRef.fields.map {  f ->
     Size(
         "${name}-${f.name}",
         listOfNotNull(description, f.description).joinToString("\n"),
-        offset + f.offset, f.size
+        offset + f.offset, f.size, false
     )
 }
 
 fun List<Field>.expandRepeats(): Sequence<Size> = asSequence().flatMap {
     when (it) {
         is RepeatedLookupField -> (1..it.repeat).map { i ->
-            Lookup(it.name(i), it.description, it.offset + it.repeat * it.size, it.lookup).apply {
+            Lookup(it.name(i), it.description, it.offset + i * it.size, it.lookup).apply {
                 lookupRef = it.lookupRef
             }
         }
 
         is RepeatedSizeField -> (1..it.repeat).map { i ->
-            Size(it.name(i), it.description, it.offset + it.repeat * it.size, it.size)
+            Size(it.name(i), it.description, it.offset + i * it.size, it.size)
         }
 
         is RepeatedStructureField -> (1..it.repeat).flatMap { i ->
-            Structure(it.name(i), it.description, it.offset + it.repeat * it.size, it.structure).apply {
+            Structure(it.name(i), it.description, it.offset + i * it.size, it.structure).apply {
                 structureRef = it.structureRef
             }.expand()
         }
 
         is Repeated -> error("Unknown repeated field $it")
-        is Structure -> it.expand()
+        is Structure -> if (it.structure == "stringRef") listOf(it) else it.expand()
         else -> listOf(it as Size)
     }
 }

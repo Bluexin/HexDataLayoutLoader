@@ -2,6 +2,7 @@ package be.bluexin.layoutloader
 
 import be.bluexin.layoutloader.json.Named
 import com.fasterxml.jackson.core.type.TypeReference
+import com.fasterxml.jackson.databind.DeserializationFeature
 import com.fasterxml.jackson.databind.SerializationFeature
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.fasterxml.jackson.module.kotlin.jacksonTypeRef
@@ -19,6 +20,7 @@ import kotlin.io.path.pathString
 object LayoutLoader {
     private val objectMapper = jacksonObjectMapper().apply {
         configure(SerializationFeature.INDENT_OUTPUT, true)
+        configure(DeserializationFeature.FAIL_ON_IGNORED_PROPERTIES, false)
     }
     private val logger = KotlinLogging.logger {}
 

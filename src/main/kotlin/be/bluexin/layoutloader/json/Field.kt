@@ -23,6 +23,7 @@ open class Size(
     override val description: String? = null,
     override val offset: Int,
     open val size: Int,
+    val export: Boolean = true
 ) : Field {
 
     override fun toString(): String {
@@ -35,7 +36,7 @@ open class Structure(
     description: String?,
     offset: Int,
     structure: String
-) : Size(name, description, offset, 0), Field {
+) : Size(name, description, offset, 0, false), Field {
     val structure: String = structure
         get() = if (enabled) structureRef.name else field
 
