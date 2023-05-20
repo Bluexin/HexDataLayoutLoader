@@ -2,6 +2,14 @@ package be.bluexin.layoutloader.json
 
 import kotlin.math.pow
 
+private fun Structure.expand(): List<Size> = structureRef.fields.map {  f ->
+    Size(
+        "${name}-${f.name}",
+        listOfNotNull(description, f.description).joinToString("\n"),
+        offset + f.offset, f.size
+    )
+}
+
 fun List<Field>.expandRepeats(): Sequence<Size> = asSequence().flatMap {
     when (it) {
         is RepeatedLookupField -> (1..it.repeat).map { i ->
@@ -14,13 +22,14 @@ fun List<Field>.expandRepeats(): Sequence<Size> = asSequence().flatMap {
             Size(it.name(i), it.description, it.offset + it.repeat * it.size, it.size)
         }
 
-        is RepeatedStructureField -> (1..it.repeat).map { i ->
+        is RepeatedStructureField -> (1..it.repeat).flatMap { i ->
             Structure(it.name(i), it.description, it.offset + it.repeat * it.size, it.structure).apply {
                 structureRef = it.structureRef
-            }
+            }.expand()
         }
 
         is Repeated -> error("Unknown repeated field $it")
+        is Structure -> it.expand()
         else -> listOf(it as Size)
     }
 }
